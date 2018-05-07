@@ -37,7 +37,7 @@ public class LoginBean {
         em.close();
         
         if(usuario != null) {
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuario.getNombre()+" "+ usuario.getApellido());
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuario);
             return "productos.xhtml?faces-redirect=true";
         }
         usuario = new Usuario();
