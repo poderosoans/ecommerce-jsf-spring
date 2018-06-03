@@ -7,42 +7,40 @@ package pe.edu.cibertec.view.managedbeans;
 
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import pe.edu.cibertec.dominio.Categoria;
 import pe.edu.cibertec.dominio.Producto;
-import pe.edu.cibertec.repositorio.CategoriaRepositorio;
-import pe.edu.cibertec.repositorio.ProductoRepositorio;
-import pe.edu.cibertec.repositorio.impl.CategoriaJpaRepositorioImpl;
-import pe.edu.cibertec.repositorio.impl.ProductoJpaRepositorioImpl;
+import pe.edu.cibertec.service.CategoriaService;
+import pe.edu.cibertec.service.ProductoService;
 
-@ManagedBean
-@ViewScoped
+//@ManagedBean
+//@ViewScoped
+@Component("ProductosBean")
+@Scope("view")
 public class ProductosBean {
     private List<Producto> lstProducto;
     private Producto producto;
     private List<Categoria> lstCategoria;
+    
+    @Autowired
+    private ProductoService productoService;
+    
+    @Autowired
+    private CategoriaService categoriaService;
     
     public ProductosBean(){
     }
     
     @PostConstruct
     public void init() {
-        EntityManagerFactory emf = (EntityManagerFactory) FacesContext.getCurrentInstance()
-                .getExternalContext().getApplicationMap().get("emf");
-        EntityManager em = emf.createEntityManager();
-        
-        ProductoRepositorio productoRepositorio = new ProductoJpaRepositorioImpl().setEm(em);
-        lstProducto = productoRepositorio.obtenerTodos();
-        
-        CategoriaRepositorio categoriaRepositorio = new CategoriaJpaRepositorioImpl().setEm(em);
-        lstCategoria = categoriaRepositorio.obtenerTodos();
-        em.close();
+        lstProducto = productoService.obtenerTodos();
+        lstCategoria = categoriaService.obtenerTodos();
+
         // no tiene argumentos, es void, public, no debe lanzar excepción, anotación @PostConstruct  
         producto = new Producto();
+
     }
 
     public List<Producto> getLstProducto() {

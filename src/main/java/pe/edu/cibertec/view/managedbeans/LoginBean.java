@@ -2,20 +2,22 @@ package pe.edu.cibertec.view.managedbeans;
 
 import java.io.IOException;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import pe.edu.cibertec.dominio.Usuario;
-import pe.edu.cibertec.repositorio.UsuarioRepositorio;
-import pe.edu.cibertec.repositorio.impl.UsuarioJpaRepositorioImpl;
+import pe.edu.cibertec.service.UsuarioService;
 
-@ManagedBean
-@SessionScoped
+//@ManagedBean
+//@SessionScoped
+@Component("loginBean")
+@Scope("session")
 public class LoginBean {
+    
+    @Autowired
+    private UsuarioService usuarioService;
     
     private Usuario usuario = new Usuario(); 
 
@@ -28,13 +30,8 @@ public class LoginBean {
     }
 
     public String login() {
-        EntityManagerFactory emf = (EntityManagerFactory)FacesContext.getCurrentInstance().getExternalContext()
-                .getApplicationMap().get("emf");
-        EntityManager em = emf.createEntityManager();
 
-        UsuarioRepositorio usuarioRepositorio = new UsuarioJpaRepositorioImpl().setEm(em);
-        usuario = usuarioRepositorio.login(usuario.getEmail(),usuario.getPassword());
-        em.close();
+        usuario = usuarioService.login(usuario.getEmail(),usuario.getPassword());
         
         if(usuario != null) {
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuario);
