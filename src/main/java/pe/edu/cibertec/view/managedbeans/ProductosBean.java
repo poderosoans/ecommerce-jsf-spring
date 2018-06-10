@@ -17,7 +17,7 @@ import pe.edu.cibertec.service.ProductoService;
 
 //@ManagedBean
 //@ViewScoped
-@Component("ProductosBean")
+@Component("productosBean")
 @Scope("view")
 public class ProductosBean {
     private List<Producto> lstProducto;
